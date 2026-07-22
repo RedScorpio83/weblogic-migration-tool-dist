@@ -2,6 +2,29 @@ import os
 import sys
 import json
 import base64
+import subprocess
+
+def ensure_dependencies():
+    needed = []
+    try:
+        import paramiko
+    except ImportError:
+        needed.append("paramiko")
+    try:
+        import dotenv
+    except ImportError:
+        needed.append("python-dotenv")
+    
+    if needed:
+        print("[BRIDGE AUTO-INSTALL] Rilevati moduli Python mancanti: " + ", ".join(needed) + ". Installazione automatica via pip...")
+        try:
+            subprocess.check_call([sys.executable, "-m", "pip", "install"] + needed)
+            print("[BRIDGE AUTO-INSTALL] Moduli installati con successo!")
+        except Exception as e:
+            print("[BRIDGE AUTO-INSTALL WARN] Impossibile autoinstallare i moduli via pip: " + str(e))
+
+ensure_dependencies()
+
 import paramiko
 try:
     from dotenv import load_dotenv
