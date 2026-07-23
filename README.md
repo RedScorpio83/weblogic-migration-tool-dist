@@ -1,12 +1,19 @@
-# WebLogic Configuration & Application Migration Tool
+﻿# WebLogic Configuration & Application Migration Tool
 
 <p align="center">
   <img src="logo.png" alt="Nimis Consulting Information Technologies" width="300"/>
 </p>
 
 <p align="center">
-  <b>Version 3.0.4 (FlatLaf Gold)</b> | Sviluppatore: <i>Alessandro Caliciotti</i> | <b>Nimis Consulting Information Technologies</b>
+  <b>Version 3.8.0 (FlatLaf Gold)</b> | Sviluppatore: <i>Alessandro Caliciotti</i> | <b>Nimis Consulting Information Technologies</b>
 </p>
+
+---
+
+## 📖 Documentazione Rapida & Link Utili
+
+- 📖 **[Guida Utente Operativa Passo-Passo](GUIDA_UTENTE.md)** - Manuale utente completo per l'utilizzo dell'applicazione, gestione dei lavori, mappature ed esportazione.
+- 📚 **[Wiki del Progetto & Architettura Tecnica](WIKI.md)** - Documentazione approfondita sull'architettura interna, MBean WebLogic, Jython AST e partizionamento anti-64KB.
 
 ---
 
@@ -24,61 +31,26 @@ Il **WebLogic Migration Tool** è una soluzione software enterprise progettata p
 
 Il tool gestisce l'intero ciclo di vita della migrazione: dall'estrazione remota via SSH con decifrazione automatica delle password dei DataSources JDBC, alla ri-mappatura grafica di nomi, porte e credenziali, fino all'installazione remota dei pacchetti applicativi (`.war`, `.ear`, `.jar`) e delle Librerie Condivise (`Shared Libraries`).
 
-#### ✨ Caratteristiche Principali (v3.0.4):
-1. **Estrazione Completa MBean (SSH & Offline)**:
-   - Estrae il 100% degli attributi di Server (argomenti JVM, ClassPath, JavaHome, SSLPort, AutoRestart), DataSources JDBC e Applicazioni.
-   - **Decifrazione Password JDBC**: Decifra automaticamente le password offuscate `XMLEncryptionSecret` direttamente dai file `config.xml` sorgente.
-2. **Riconoscimento & Deploy Nativo Librerie Condivise (`Shared Libraries`)**:
-   - Riconosce automaticamente le Librerie Condivise (inclusi i tag di versione WebLogic `#` e `@` come `caf_lib#1.0@1.0.0`).
-   - Esegue il deploy nativo su WebLogic impostando `libraryModule='true'`.
-3. **Pannello di Rinomina & Mappatura Dinamica (A -> B)**:
-   - Tabella interattiva per rinominare Cluster e Server, cambiare porte di ascolto, verificare duplicati e sostituire le password del database.
-4. **Flag Deploy Applicativi Spuntabile in GUI**:
-   - Checkbox `☑ Esegui Deploy Applicativi` per scegliere se migrare sia la topologia che le applicazioni, oppure limitare l'esecuzione alla sola topologia (Machine, Cluster, Server, JDBC DataSources).
-5. **Robustezza & Partizionamento WLST (Anti-JVM 64KB Limit)**:
-   - Suddivide automaticamente gli script Python in lotti di funzioni da 15 elementi per evitare il limite di 64KB per metodo bytecode della JVM.
-   - Utilizza helpers `safe_create` e lookup delle proprietà JDBC per prevenire eccezioni di risorse pre-esistenti (`BeanAlreadyExistsException` / `NoneType`).
-6. **Architettura 100% Portabile e Standalone**:
-   - Include un runtime OpenJDK 17 integrato (`run.cmd` / `run.sh`). Non richiede Java preinstallato sul sistema.
-
----
-
-### 🖥️ Guida all'Interfaccia Grafica ed Utilizzo
-
-#### 1. Scheda 1: Estrazione Sorgente via SSH (Da A)
-Permette di inserire le credenziali SSH e WebLogic del server sorgente (11g/12c) ed avviare l'estrazione automatica del dominio. In alternativa, permette di generare un pacchetto di estrazione offline (`dump_tool_xxx/`) per server isolati.
-
-![Estrazione Sorgente SSH](docs/images/tab1_extraction.png)
-
-- **Form Sinistro**: Inserimento IP sorgente, porta SSH, credenziali di sistema `root` e credenziali WebLogic.
-- **Pulsante "ESTRAZIONE REMOTA SSH (SERVER LINUX)"**: Avvia lo script WLST remoto in background con **Loading Overlay stile Apple in tema Gold Leaf**.
-- **Albero del Dominio (Destra)**: Visualizza la topologia estratta (Cluster, Managed Server, Porte SSL, DataSources JDBC, Applicazioni e Librerie).
-- **Console Log (Basso)**: Mostra in tempo reale lo scaricamento delle applicazioni e delle librerie nella cartella `apps/`.
-
----
-
-#### 2. Scheda 2: Rinomina & Mappature (A -> B)
-Consente di modificare ed adattare la configurazione sorgente prima del deploy nel nuovo ambiente.
-
-![Rinomina e Mappature](docs/images/tab2_mapping.png)
-
-- **Modifica dei Nomi**: Cambia il nome dei Cluster e dei Managed Server target.
-- **Porte e Credenziali DB**: Sostituisci la porta di ascolto dei server gestiti ed aggiorna la password reale del database per i DataSources JDBC.
-- **Strumenti Toolbar**: Salva/Carica Progetto (`.wlsmap`), Valida Mappature, Controllo Porte Duplicate, Consolida Machine, Trova & Sostituisci.
-- **Pulsante "CONFERMA MAPPATURE E RINOMINE"**: Applica le modifiche al modello in memoria.
-
----
-
-#### 3. Scheda 3: Generatore Task & Deploy Remoto (Verso B)
-Genera il pacchetto di deploy numerato (`task_xxx/`) oppure esegue direttamente l'installazione remota via SSH su WebLogic target.
-
-![Generazione ed Esecuzione Task](docs/images/tab3_execution.png)
-
-- **Pulsante "GENERA PACCHETTO TASK NUMERATO"**: Crea una cartella standalone pronta per l'esecuzione su macchine offline.
-- **Checkbox "Esegui Deploy Applicativi"**: Permette di abilitare o disabilitare l'installazione delle applicazioni durante l'esecuzione SSH.
-- **Pulsante "ESECUZIONE SSH REMOTA SU WEBLOGIC 12C"**:
-  1. Esegue lo script WLST `deploy_topology.py` per creare Machine, Cluster, Server e DataSources JDBC.
-  2. Esegue lo script WLST `deploy_apps.py` per installare ed attivare le applicazioni e le Librerie Condivise (`libraryModule='true'`).
+#### ✨ Caratteristiche Principali (v3.8.0):
+1. 💻 **Avvio sempre a Schermo Intero**:
+   - L'applicazione si avvia automaticamente massimizzata (`MAXIMIZED_BOTH`) per la massima visibilità delle griglie e dei diagrammi.
+2. 📂 **Gestione Lavori Standalone (`works/`)**:
+   - Organizzazione del lavoro in cartelle dedicate (`works/001_xxx`) contenenti `dump/`, `deploy/`, `target_dumps/` e `prj_saves/`.
+3. 🧠 **Gestione Intelligente delle Machine**:
+   - **Eliminazione Intelligente**: Rileva le risorse collegate (Server, NodeManager) alla Machine in eliminazione proponendo il popup modale per la riassegnazione prima della cancellazione.
+   - **Consolida Machine**: Caselle di testo precompilate per ciascuna Machine rilevata per la rinomina globale in 1-click.
+   - **Aggiungi Machine**: Finestra dedicata per creare nuove Machine target e selezionare le risorse da associarvi tramite checkbox.
+4. 🔀 **Validazione Mappature Multi-Target & Modal Interattivo**:
+   - Supporto nativo ai target multipli separati da virgola (es. `cluster1,cluster2,server1`) senza falsi positivi.
+   - Modal interattivo **`🔧 Correzione Mappature Non Valide`** con tabella delle sole righe errate a sinistra ed **Ispettore Proprietà Elemento** a destra per la correzione guidata e la sincronizzazione con la griglia principale.
+5. 🔄 **Popolamento Automatico & Viste Grafiche**:
+   - Aggiornamento istantaneo ed automatico dell'Albero di Gerarchia Target e della Vista Architetturale a Blocchi.
+6. 🔍 **Zoom & Esportazione Schermata PNG**:
+   - Controlli **Zoom In (+)**, **Zoom Out (-)**, **100%** e pulsante **`📸 SALVA SCHERMATA (PNG)`** per salvare l'immagine HD dell'architettura.
+7. 🔐 **Estrazione SSH & Decifrazione Password JDBC**:
+   - Decifrazione automatica delle password offuscate `XMLEncryptionSecret` direttamente dai file `config.xml` sorgente.
+8. 📦 **Robustezza WLST & Anti-JVM 64KB Limit**:
+   - Partizionamento degli script Python generati in lotti da 15 elementi per evitare limiti di bytecode JVM.
 
 ---
 
@@ -91,96 +63,20 @@ Genera il pacchetto di deploy numerato (`task_xxx/`) oppure esegue direttamente 
    ```
 2. **Avvio su Windows**:
    Fare doppio click sul file `run.cmd` (oppure eseguire da terminale: `run.cmd`).
-3. **Avvio su Linux**:
+3. **Avvio su Linux / macOS**:
    ```bash
    chmod +x run.sh
    ./run.sh
    ```
 
-*Nota: Al primo avvio, i file binari della JDK integrata (`jdk_part1.bin` + `jdk_part2.bin`) verranno decompressi ed attivati automaticamente.*
-
 ---
-
-<br/>
 
 ## 🇬🇧 English
 
 ### 📌 Software Overview
-The **WebLogic Migration Tool** is an enterprise software solution designed to automate topology extraction, configuration renaming, and application migration between **Oracle WebLogic Server (11g/12c)** environments.
+**WebLogic Migration Tool** is an enterprise software platform designed to extract, migrate, and replicate topology and applications between **Oracle WebLogic Server (11g/12c)** environments.
 
-The tool handles the entire migration lifecycle: from remote SSH extraction with automatic decryption of JDBC DataSource passwords, to graphical renaming/mapping of ports and credentials, up to physical deployment of application archives (`.war`, `.ear`, `.jar`) and Shared Libraries.
-
-#### ✨ Key Features (v3.0.4):
-1. **Exhaustive MBean Extraction (SSH & Offline)**:
-   - Extracts 100% of MBean attributes for Servers (JVM startup args, ClassPath, JavaHome, SSLPort, AutoRestart), JDBC DataSources, and Applications.
-   - **JDBC Password Decryption**: Automatically decrypts obfuscated `XMLEncryptionSecret` passwords directly from source `config.xml` files.
-2. **Automatic Shared Library Detection & Deployment**:
-   - Automatically detects Shared Libraries (including WebLogic versioning tags `#` and `@` such as `caf_lib#1.0@1.0.0`).
-   - Deploys shared libraries natively setting `libraryModule='true'`.
-3. **Dynamic Renaming & Mapping Panel (A -> B)**:
-   - Interactive data table to rename Clusters and Servers, change listen ports, check duplicate ports, and update database passwords.
-4. **GUI Application Deployment Toggle**:
-   - Checkbox `☑ Esegui Deploy Applicativi` to select whether to deploy both topology and applications, or restrict execution to topology only (Machines, Clusters, Servers, JDBC DataSources).
-5. **Robustness & WLST Code Batching (Anti-JVM 64KB Limit)**:
-   - Automatically splits Python WLST scripts into function batches of 15 items to prevent JVM 64KB bytecode method limits.
-   - Uses `safe_create` helpers and JDBC property lookups to prevent pre-existing resource exceptions (`BeanAlreadyExistsException` / `NoneType`).
-6. **100% Portable Standalone Architecture**:
-   - Bundles a portable OpenJDK 17 runtime (`run.cmd` / `run.sh`). No system Java installation required.
+- **Documentation**: Read the complete **[User Guide (GUIDA_UTENTE.md)](GUIDA_UTENTE.md)** and **[Technical Wiki (WIKI.md)](WIKI.md)** for further operational and architectural details.
 
 ---
-
-### 🖥️ User Interface & Workflow Guide
-
-#### 1. Tab 1: Source Extraction via SSH (From A)
-Allows entering SSH and WebLogic credentials for the source 11g/12c server and starting automated domain extraction. Alternatively, generates an offline extraction package (`dump_tool_xxx/`) for isolated environments.
-
-![Source SSH Extraction](docs/images/tab1_extraction.png)
-
-- **Left Form**: Input source IP, SSH port, `root` credentials, and WebLogic admin credentials.
-- **"ESTRAZIONE REMOTA SSH (SERVER LINUX)" Button**: Triggers remote WLST extraction in the background featuring an **Apple-style Gold Leaf loading overlay**.
-- **Domain Tree (Right)**: Displays the extracted topology hierarchy (Clusters, Managed Servers, SSL Ports, JDBC DataSources, Applications, Libraries).
-- **Console Log (Bottom)**: Real-time progress output showing application and library downloads into `apps/`.
-
----
-
-#### 2. Tab 2: Renaming & Mapping (A -> B)
-Allows customizing and adapting the source configuration before deploying to the target environment.
-
-![Renaming and Mapping](docs/images/tab2_mapping.png)
-
-- **Name Editing**: Modify Cluster and Managed Server target names.
-- **Ports & DB Credentials**: Reassign listen ports and update real database passwords for JDBC DataSources.
-- **Toolbar Tools**: Save/Load Project (`.wlsmap`), Validate Mappings, Duplicate Port Checking, Machine Consolidation, Search & Replace.
-- **"CONFERMA MAPPATURE E RINOMINE" Button**: Applies changes to the in-memory migration model.
-
----
-
-#### 3. Tab 3: Task Generator & Remote Execution (To B)
-Generates a standalone migration package (`task_xxx/`) or executes direct remote SSH deployment to target WebLogic server.
-
-![Task Generation and Execution](docs/images/tab3_execution.png)
-
-- **"GENERA PACCHETTO TASK NUMERATO" Button**: Exports a self-contained package for air-gapped target servers.
-- **"Esegui Deploy Applicativi" Checkbox**: Enables or disables application deployment during SSH execution.
-- **"ESECUZIONE SSH REMOTA SU WEBLOGIC 12C" Button**:
-  1. Runs `deploy_topology.py` WLST script to create Machines, Clusters, Servers, and JDBC DataSources.
-  2. Runs `deploy_apps.py` WLST script to install and activate applications and Shared Libraries (`libraryModule='true'`).
-
----
-
-### 🚀 Installation & Quick Start
-
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/RedScorpio83/weblogic-migration-tool-dist.git
-   cd weblogic-migration-tool-dist
-   ```
-2. **Launch on Windows**:
-   Double click `run.cmd` (or execute `run.cmd` in Command Prompt).
-3. **Launch on Linux**:
-   ```bash
-   chmod +x run.sh
-   ./run.sh
-   ```
-
-*Note: On first launch, the bundled OpenJDK 17 volume files (`jdk_part1.bin` + `jdk_part2.bin`) will be uncompressed and initialized automatically.*
+*Developed by Alessandro Caliciotti - Nimis Consulting Information Technologies*
