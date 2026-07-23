@@ -1,19 +1,19 @@
 ﻿# WebLogic Configuration & Application Migration Tool
 
 <p align="center">
-  <img src="logo.png" alt="Nimis Consulting Information Technologies" width="300"/>
+  <img src="logo.png" alt="Nimis Consulting Information Technologies" width="320"/>
 </p>
 
 <p align="center">
-  <b>Version 3.9.0 (FlatLaf Gold)</b> | Sviluppatore: <i>Alessandro Caliciotti</i> | <b>Nimis Consulting Information Technologies</b>
+  <b>Version 4.0.0 (FlatLaf Gold Enterprise)</b> | Sviluppatore: <i>Alessandro Caliciotti</i> | <b>Nimis Consulting Information Technologies</b>
 </p>
 
 ---
 
 ## 📖 Documentazione Rapida & Link Utili
 
-- 📖 **[Guida Utente Operativa Passo-Passo (GUIDA_UTENTE.md)](GUIDA_UTENTE.md)** - Guida esaustiva con spiegazione di tutti i pulsanti ed i comandi dell'applicazione.
-- 📚 **[Wiki del Progetto & Architettura Tecnica (WIKI.md)](WIKI.md)** - Documentazione approfondita sull'architettura interna, MBean WebLogic, Jython AST e partizionamento anti-64KB.
+- 📖 **[Guida Utente Operativa Passo-Passo (GUIDA_UTENTE.md)](GUIDA_UTENTE.md)** - Manuale utente completo con catalogo esaustivo di tutti i pulsanti e le schermate dell'applicazione.
+- 📚 **[Wiki del Progetto & Architettura Tecnica (WIKI.md)](WIKI.md)** - Documentazione approfondita sull'architettura interna, MBean WebLogic, Jython AST, partizionamento anti-64KB e workflow `pack/unpack`.
 
 ---
 
@@ -27,48 +27,54 @@
 ## 🇮🇹 Italiano
 
 ### 📌 Panoramica del Software
-Il **WebLogic Migration Tool** è una soluzione software enterprise progettata per automatizzare l'estrazione, la migrazione e la replicazione della topologia e delle applicazioni fra ambienti **Oracle WebLogic Server (11g/12c)**.
+Il **WebLogic Migration Tool** è una soluzione software enterprise progettata per automatizzare l'estrazione, la ri-mappatura, la migrazione e la replicazione della topologia e delle applicazioni fra ambienti **Oracle WebLogic Server (11g/12c)**.
+
+Dalla versione **4.0.0**, la piattaforma integra il nuovo modulo di **Provisioning Bare-Metal Zero-to-Hero**, consentendo di trasformare server Linux totalmente puliti in cluster WebLogic 12c operativi in 1-Click via SSH o tramite pacchetti task esportabili.
 
 ---
 
-### ✨ Funzionalità Operative e Strumenti (Catalogo Features)
+### ✨ Catalogo Completo delle Funzionalità Enterprise (v4.0.0)
 
-#### 1. 💻 Gestione Schermo Intero & Lavori Standalone (`works/`)
-- **Avvio Massimizzato**: Avvio automatico a schermo intero (`MAXIMIZED_BOTH`).
-- **Pulsante `📁 CARICA LAVORO DI DESTINAZIONE`**: Seleziona un lavoro attivo dalla cartella `works/` sbloccando le schede 1, 2 e 3.
-- **Pulsante `➕ NUOVO LAVORO`**: Crea un lavoro numerato progressivamente (es. `001_NomeLavoro`).
-- **Pulsante `🧹 PULISCI TASK E DUMP`**: Gestore grafico dei lavori con possibilità di eliminazione singola tramite icona del cestino.
+#### 1. 🛠️ Modulo Provisioning Bare-Metal WebLogic 12c & Setup Nodi (Fase 0)
+- **Doppia Modalità di Esecuzione (ROOT vs ORACLE)**:
+  - 🔴 **Modalità ROOT**: Crea automaticamente la struttura di directory, il gruppo `oinstall`, l'utente `oracle`, assegna i permessi `chown -R oracle:oinstall` e gestisce l'eventuale remount di `/tmp` (con flag `exec`).
+  - 🟡 **Modalità UTENTE ORACLE**: Esegue il setup lavorando con i permessi dell'utente `oracle` senza richiedere comandi root di sistema.
+- **Preset Alberatura Target (OFA Standard)**:
+  - **STANDARD EDG (`/u01/app/oracle/...`)**: Rispetta al 100% l'Enterprise Deployment Guide ufficiale Oracle.
+  - **CUSTOM**: Consente la personalizzazione completa di tutti i percorsi radice.
+- **Installazione Silenziosa JDK & WLS**:
+  - Trasferimento SFTP ed estrazione automatica del JDK Linux e silent install di WebLogic Server 12c (`silent_install.rsp` + `oraInst.loc`).
+- **Creazione Dominio & Security `boot.properties`**:
+  - Generazione WLST Offline del dominio base ed autocomposizione del file `servers/AdminServer/security/boot.properties` per consentire l'avvio in background dell'AdminServer senza prompt password.
+- **Propagazione del Dominio sui Nodi Secondari (`pack` & `unpack`)**:
+  - Generazione automatica del template `domain_managed.jar` tramite **`pack.sh`** prima dell'avvio dell'AdminServer.
+  - Trasferimento SFTP ed esecuzione di **`unpack.sh`** su ciascun nodo secondario Machine per la ricreazione dinamica del dominio.
+- **Setup & Avvio NodeManager sui Nodi**:
+  - Configurazione automatica di `nodemanager.properties` (porta 5556, `Plain`/`SSL`) e `nodemanager.domains` con avvio in background su tutti i nodi.
+- **Esecuzione 1-Click SSH con Log in Tempo Reale**:
+  - Pulsante **`🚀 ESEGUI PROVISIONING REMOTO IN 1-CLICK (SSH)`** con overlay di caricamento stile Apple e diretta nella console verde delle attività.
 
-#### 2. 🔌 Estrazione SSH, Profili Bidirezionali & Dump Offline (Scheda 1)
-- **Menu Profili Sincronizzati**: Sincronizzazione automatica bidirezionale dei profili di connessione sorgente e target.
-- **Pulsante `SALVA CONFIGURAZIONE` & `GESTORE CONNESSIONI`**: Salva e gestisce i profili in `connections_profiles.json`.
-- **Pulsante `🚀 ESTRAZIONE REMOTA SSH`**: Scansione remota del server sorgente, decifrazione automatica password JDBC e download delle **Librerie Condivise** e delle app.
-- **Pulsante `📦 GENERA PACCHETTO ESTRAZIONE OFFLINE`**: Genera script ed esecutori per server sorgente isolati.
+#### 2. 🧠 Gestione Intelligente Machine & Cluster (Multi-Target Cleanup)
+- **Eliminazione Intelligente Machine**: Rileva le risorse collegate (Server, NodeManager) alla Machine in eliminazione proponendo la finestra modale per la riassegnazione prima della cancellazione.
+- **Eliminazione Intelligente Cluster & Smart Multi-Target Cleanup**: Se si elimina un Cluster con risorse collegate (DataSources, App con target multipli come `clusterA,clusterB`), offre l'opzione per **rimuovere puntualmente il solo cluster eliminato** mantenendo intatti gli altri target!
+- **Consolida Machine**: Caselle di testo precompilate per ciascuna Machine per la rinomina globale in 1-click.
+- **Aggiungi Machine**: Popup per definire una nuova Machine target e selezionare le risorse da associarvi tramite checkbox.
 
-#### 3. 🧠 Gestione Intelligente Machine & Cluster (Scheda 2)
-- **Pulsante `🗑️ ELIMINA RIGA SELEZIONATA`**:
-  - **Smart Machine Deletion**: Se la Machine possiede risorse collegate, apre il popup per riassegnarle prima della cancellazione.
-  - **Smart Cluster Deletion**: Per i Cluster con risorse collegate, offre la funzione **`Smart Multi-Target Cleanup`** (rimuove il cluster dai target multipli senza toccare gli altri target), la riassegnazione ad un altro cluster o l'eliminazione delle risorse.
-- **Pulsante `📉 CONSOLIDA MACHINE`**: Popup con caselle di testo precompilate per ciascuna Machine per la rinomina globale in 1-click.
-- **Pulsante `➕ AGGIUNGI MACHINE`**: Popup per definire una nuova Machine target e selezionare le risorse da associarvi tramite checkbox.
+#### 3. 🔀 Validazione Multi-Target & Modal Interattivo di Correzione
+- **Validatore Coerenza Mappature**: Riconosce i target multipli separati da virgola senza generare falsi errori.
+- **Modal Modale `🔧 Correzione Mappature Non Valide`**: Mostra la tabella delle sole righe errate a sinistra e l'**Ispettore Proprietà Elemento** a destra per la correzione guidata e la sincronizzazione in 1-click sulla griglia principale.
 
-#### 4. 🔀 Validazione Multi-Target & Modal Interattivo di Correzione (Scheda 2)
-- **Pulsante `VALIDA MAPPATURE`**: Verificatore di coerenza con supporto ai target multipli separati da virgola (es. `cluster1,cluster2`).
-- **Modal Modale `🔧 Correzione Mappature Non Valide`**: In caso di errori, mostra la tabella delle righe errate a sinistra e l'**Ispettore Proprietà Elemento** a destra per la correzione guidata e la sincronizzazione in 1-click.
-- **Pulsante `PORTE DUPLICATE`**: Identifica e segnala conflitti sulle porte dei Managed Server.
-- **Pulsante `🔄 CAMBIA OCCORRENZE`**: Trova & Sostituisci globale di testo nella griglia.
-- **Pulsante `.. ADATTA COLONNE`**: Auto-ridimensiona la larghezza delle colonne della tabella.
+#### 4. 🎨 Viste Architetturali Grafiche, Zoom & Esportazione HD PNG
+- **Diagramma 2D Draw.io**: Rendering vettoriale con Zoom +, Zoom -, 100%, Adatta a Schermata ed Allineamento Top-Down Centrato.
+- **Vista Architetturale a Blocchi**: Visualizzazione moderna dei blocchi contenitori con pulsante **`📸 SALVA SCHERMATA (PNG)`** per esportare l'immagine dell'architettura in alta definizione.
 
-#### 5. 🎨 Viste Grafiche, Zoom & Esportazione PNG (Scheda 2)
-- **Sotto-scheda `⚙️ Ispettore Proprietà`**: Modifica rapida dell'elemento con pulsante `💾 APPLICA MODIFICHE PROPRIETÀ`.
-- **Sotto-scheda `🎨 Diagramma Draw.io`**: Diagramma 2D vettoriale con pulsanti `🔍 Zoom +`, `🔍 Zoom -`, `🎯 100%`, `📐 ADATTA A SCHERMATA` e `📊 ALLINEA TOP-DOWN CENTRATO`.
-- **Sotto-scheda `🧩 Vista Architetturale (Blocchi)`**: Contenitori visuali con pulsanti `🔍 Zoom +`, `🔍 Zoom -`, `🎯 100%` e **`📸 SALVA SCHERMATA (PNG)`** per esportare l'immagine dell'architettura in alta definizione.
-- **Sotto-scheda `🌳 Gerarchia Target`**: Albero ad espansione dinamica del dominio.
+#### 5. 📂 Gestione Lavori Standalone (`works/`)
+- Organizzazione automatica in sotto-cartelle isolate (`works/001_xxx`) contenenti `dump/`, `deploy/`, `target_dumps/` e `prj_saves/`.
+- Pulsante **`🧹 PULISCI TASK E DUMP`** per la gestione ed eliminazione visiva dei lavori.
 
-#### 6. 📦 Ispezione Target, Generatore Task & Deploy Remoto (Scheda 3)
-- **Pulsante `SCARICA ELEMENTI DI DOMINIO (WEBLOGIC TARGET)`**: Connessione ed ispezione in tempo reale del server target B.
-- **Pulsante `🚀 ESECUZIONE SSH REMOTA SU WEBLOGIC 12C`**: Esecuzione remota via SSH degli script topology ed applicativi.
-- **Pulsante `📦 GENERA PACCHETTO TASK NUMERATO`**: Genera cartelle standalone `task_xxx/` con partizionamento anti-64KB limit, cartella `apps/` e runner `run_migration.sh` / `run_migration.cmd`.
+#### 6. 🔒 Hardening di Sicurezza & Protezione Bytecode
+- Partizionamento degli script Python in lotti da 15 elementi per evitare il limite di 64KB bytecode della JVM.
+- Decifrazione automatica delle password dei DataSources JDBC cifrate con `XMLEncryptionSecret`.
 
 ---
 
@@ -95,6 +101,7 @@ Il **WebLogic Migration Tool** è una soluzione software enterprise progettata p
 **WebLogic Migration Tool** is an enterprise software platform designed to extract, migrate, and replicate topology and applications between **Oracle WebLogic Server (11g/12c)** environments.
 
 - **Complete User Guide**: Refer to **[GUIDA_UTENTE.md](GUIDA_UTENTE.md)** for a detailed walkthrough of all GUI buttons and operational controls.
+- **Technical Architecture**: Refer to **[WIKI.md](WIKI.md)** for internally used MBeans, Jython AST partitioning, and `pack/unpack` workflow details.
 
 ---
 *Developed by Alessandro Caliciotti - Nimis Consulting Information Technologies*
