@@ -1,7 +1,6 @@
-==========================================================================
- WEBLOGIC CONFIGURATION MIGRATION TOOL v2.0
+﻿==========================================================================
+ WEBLOGIC CONFIGURATION MIGRATION TOOL v4.0.0
  Sviluppatore: Alessandro Caliciotti
- Azienda: Nimis Consulting Information Technologies
 ==========================================================================
 
 REQUISITI ED INSTALLAZIONE SU NUOVE POSTAZIONI:
@@ -18,18 +17,11 @@ ISTRUZIONI DI AVVIO:
    Aprire il terminale ed eseguire: ./run.sh
 
 STRUTTURA DELLA CARTELLA:
-- MigrationTool.jar     : Eseguibile principale della GUI
-- logo.png              : Logo aziendale Nimis Consulting
-- jdk/                  : Ambiente Runtime Java 17 Portabile integrato
-- lib/                  : Librerie FlatLaf Dark Theme
-- extractions/          : Cartella contenente i dump estratti dal server sorgente
-- extractions_tools/    : Pacchetti generati per l'estrazione offline sul server sorgente
-- tasks/                : Pacchetti di migrazione/deploy generati da eseguire sul target
-
-FUNZIONALITÀ CHIAVE:
-1. Estrazione remota via SSH (WebLogic 11g) e decifrazione automatica delle password JDBC.
-2. Estrazione offline senza SSH tramite pulsante 'GENERA PACCHETTO ESTRAZIONE OFFLINE'.
-3. Archiviazione automatica di tutti i file applicativi (.war, .ear, .jar) nella cartella apps/.
-4. Mappatura ed editing dinamico di Server, Cluster, DataSources e Password DB.
-5. Replicazione 100% automatica della topologia e deploy applicativo su WebLogic 12c.
-6. Overlay di attesa stile Apple in tema Gold Leaf e pulsante di pulizia rapida dello storico.
+- MigrationTool.jar : Eseguibile principale della GUI
+- run.cmd           : Script di avvio automatico per Windows
+- run.sh            : Script di avvio automatico per Linux / macOS
+- README.md         : Documentazione generale del repository
+- GUIDA_UTENTE.md    : Guida utente operativa con catalogo di tutte le funzioni
+- WIKI.md           : Wiki tecnica dell'architettura MBean e pack/unpack
+- jdk/              : Java Runtime portabile integrato (JDK 17)
+- works/            : Directory dei lavori e dei task esportati

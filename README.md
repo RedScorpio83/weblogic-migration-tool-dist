@@ -1,11 +1,7 @@
 ﻿# WebLogic Configuration & Application Migration Tool
 
 <p align="center">
-  <img src="logo.png" alt="Nimis Consulting Information Technologies" width="320"/>
-</p>
-
-<p align="center">
-  <b>Version 4.0.0 (FlatLaf Gold Enterprise)</b> | Sviluppatore: <i>Alessandro Caliciotti</i> | <b>Nimis Consulting Information Technologies</b>
+  <b>Version 4.0.0 (FlatLaf Gold Enterprise)</b> | Sviluppatore: <i>Alessandro Caliciotti</i>
 </p>
 
 ---
@@ -104,4 +100,4 @@ Dalla versione **4.0.0**, la piattaforma integra il nuovo modulo di **Provisioni
 - **Technical Architecture**: Refer to **[WIKI.md](WIKI.md)** for internally used MBeans, Jython AST partitioning, and `pack/unpack` workflow details.
 
 ---
-*Developed by Alessandro Caliciotti - Nimis Consulting Information Technologies*
+*Developed by Alessandro Caliciotti*

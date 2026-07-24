@@ -1,7 +1,6 @@
-#!/bin/bash
+﻿#!/bin/bash
 # ==========================================================================
 # WEBLOGIC MIGRATION TOOL - PORTABLE LINUX LAUNCHER
-# Nimis Consulting Information Technologies
 # ==========================================================================
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

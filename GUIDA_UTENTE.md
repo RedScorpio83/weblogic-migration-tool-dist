@@ -1,7 +1,7 @@
 ﻿# 📖 Guida Utente Operativa - WebLogic Migration Tool (v4.0.0)
 
 <p align="center">
-  <b>Sviluppatore: Alessandro Caliciotti</b> | <i>Nimis Consulting Information Technologies</i>
+  <b>Sviluppatore: Alessandro Caliciotti</b>
 </p>
 
 ---
@@ -112,4 +112,4 @@ Attivabile dal pulsante **`🛠️ PROVISIONING WEBLOGIC 12C & NODI (BARE-METAL)
 Sì! Tutti i comandi SSH, l'estrazione JDK, il silent install WLS, il `pack.sh`, l'unpack ed l'avvio del NodeManager sui nodi vengono trasmessi in tempo reale nella **Console Log verde in basso**.
 
 ---
-*Nimis Consulting Information Technologies - Alessandro Caliciotti*
+*Alessandro Caliciotti*

@@ -1,10 +1,6 @@
 ﻿# WebLogic Configuration & Application Migration Tool - Technical Wiki
 
 <p align="center">
-  <img src="logo.png" alt="Nimis Consulting Information Technologies" width="320"/>
-</p>
-
-<p align="center">
   <b>Versione Documentata: 4.0.0 (FlatLaf Gold Enterprise)</b> | Autore: <i>Alessandro Caliciotti</i>
 </p>
 
@@ -80,4 +76,4 @@ works/
 
 ---
 
-*Nimis Consulting Information Technologies - Alessandro Caliciotti*
+*Alessandro Caliciotti*
